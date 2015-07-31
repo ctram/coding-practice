@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<head>
+  // TODO: add jquery
+</head>
+<body>
+  <ul>
+    <li>item1</li>
+    <li>item2</li>
+    <li>item3</li>
+    <li>item4</li>
+    <li>item5</li>
+    <li>item6</li>
+  </ul>
+</body>
+
+<script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
+
+<script>
+  function delegateEvent (parent, child, eventType, callback) {
+    // set handle onto parent, listening for a eventType
+    // if one is triggered, check to see whether the target of the event is a child of the parent
+    $(parent).on(eventType, function (event) {
+      if (checkWhetherChild(parent, event)) {
+        var child = event.target;
+        callback(child);
+      }
+    });
+  }
+
+  function checkWhetherChild (parent, event) {
+    var target = event.target;
+    $children = $(parent).children();
+    var node;
+    for (var i = 0; i < $children.length; i++) {
+      node = $children[i];
+      if (node === target) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function testCallback (child) {
+    $(child).text('Event delegation works!');
+  }
+
+  // imitates $('ul').on('click', 'li', callback)
+  delegateEvent('ul', 'li', 'click', testCallback);
+</script>

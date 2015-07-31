@@ -1,37 +1,72 @@
 <script>
-function quickSort (arr, start, len) {
-  if (len <= 1) {
-    return arr;
+function heapSort (arr, start, len) {
+  var heapSize = 0;
+
+  // turn the array into a heap
+  while (heapSize < arr.length) {
+    heapSize += 1;
+    heapifyUp(arr, heapSize);
   }
 
-  var pivotIdx = partition(arr, start, len);
-  quickSort(arr, start, pivotIdx - start); // do not include the element at pivotIdx in the next call to quickSort - it's already in the correct position.
-  if (pivotIdx + 1 <= arr.length - 1) {
-    quickSort(arr, pivotIdx + 1, len - (pivotIdx - start) - 1);
+
+  // change heap back into an array
+
+
+  while (heapSize > 0) {
+    var min = arr[0];
+    arr[0] = arr[heapSize - 1];
+    heapSize -= 1;
+    heapifyDown(arr, heapSize);
+    arr[heapSize] = min;
   }
-  return arr;
+
+  return arr; // returns arr sorted by min or max depending on whether a min or max heap is used.
 }
 
-function partition (arr, start, len) {
-  var pivot = arr[start + len-1]; // let last element always be pivot
-  var runnerIdx = start;
-  var temp;
-  for (var i = start; i < start + len - 1; i++) {
-    if (arr[i] < pivot) {
-      temp = arr[i];
-      arr[i] = arr[runnerIdx];
-      arr[runnerIdx] = temp;
-      runnerIdx += 1;
+function heapifyDown (arr, len, parentIdx) {
+  if (parentIdx === undefined) {
+    parentIdx = 0;
+  }
+
+  var childrenIdx = [parentIdx * 2 + 1, parentIdx * 2 + 2 ];
+  var parent = arr[parentIdx];
+  for (var i = 0; i < 2; i++) {
+    var childIdx = childrenIdx[i];
+
+    // check that childIdx is within the array-heap; if not, this parent has no more children, no need to check child against parent;
+    if (childIdx >= len) {
+      continue;
+    }
+
+    var child = arr[childIdx];
+
+    // check whether child is higher priority than parent; if so, switch their places.
+    if (child < parent) {
+      swap(arr, parentIdx, childIdx);
+      heapifyDown(arr, len, childIdx);
     }
   }
-
-  temp = arr[runnerIdx];
-  arr[runnerIdx] = pivot;
-  arr[start + len - 1] = temp;
-  return runnerIdx;
 }
 
-a = [ -1, 3, -1, -14, 4, 5, 6, -2, -3, -4, 24 , -234 , -1123 , 234, 45, 2, 43 , 2, 0, 0 ,23, 304, 03, 0];
- // a = [];
-console.log(quickSort(a, 0, a.length));
+function heapifyUp (arr, len) {
+  var childIdx = len - 1;
+  while (childIdx > 0) {
+    var parentIdx = Math.floor((childIdx - 1) / 2);
+    if (arr[parentIdx] > arr[childIdx]) {
+      swap(arr, parentIdx, childIdx);
+      childIdx = parentIdx;
+    }
+    return;
+  }
+}
+
+function swap (arr, parentIdx, childIdx) {
+  var temp = arr[parentIdx];
+  arr[parentIdx] = arr[childIdx];
+  arr[childIdx] = temp;
+}
+
+var a = [-34, 3, -1, 1, 10, 0, -2, 100, 234, 34, 23423423];
+
+console.log(heapSort(a, 0, a.length));
 </script>

@@ -1,12 +1,7 @@
-// [1,4,6,8,7,6,4,3,2]
-
 function heapSort (arr, start, len) {
-  // 1 - turn the array into a heap
-  // 2 - turn the the heap back into an array, which will now be sorted.
   var heapSize = 0;
 
   // turn the array into a heap
-  // FIXME: infinite loop problem situation
   while (heapSize < arr.length) {
     heapSize += 1;
     heapifyUp(arr, heapSize);
@@ -18,33 +13,46 @@ function heapSort (arr, start, len) {
     arr[0] = arr[heapSize - 1];
     heapSize -= 1;
     heapifyDown(arr, heapSize);
+    arr[heapSize] = min;
   }
 
   return arr; // returns arr sorted by min or max depending on whether a min or max heap is used.
 }
 
-function heapifyDown (arr, len) {
-  var parentIdx = arr[0];
-  while (parentIdx < len - 1) {
-    var childrenIdx = [parentIdx * 2 + 1, parentIdx * 2 + 2];
-    for (var i = 0; i < 2; i++) {
-      if (arr[childrenIdx[i]] < arr[parentIdx]) {
-        swap(arr, childrenIdx[i], parentIdx);
-        parentIdx = childrenIdx[i];
-        break;
-      }
+function heapifyDown (arr, len, parentIdx) {
+  if (parentIdx === undefined) {
+    parentIdx = 0;
+  }
+
+  var childrenIdx = [parentIdx * 2 + 1, parentIdx * 2 + 2 ];
+  var parent = arr[parentIdx];
+  for (var i = 0; i < 2; i++) {
+    var childIdx = childrenIdx[i];
+
+    // check that childIdx is within the array-heap; if not, this parent has no more children, no need to check child against parent;
+    if (childIdx >= len) {
+      continue;
+    }
+
+    var child = arr[childIdx];
+
+    // check whether child is higher priority than parent; if so, switch their places.
+    if (child < parent) {
+      swap(arr, parentIdx, childIdx);
+      heapifyDown(arr, len, childIdx);
     }
   }
 }
 
 function heapifyUp (arr, len) {
-  var childIdx = arr[len - 1];
+  var childIdx = len - 1;
   while (childIdx > 0) {
     var parentIdx = Math.floor((childIdx - 1) / 2);
     if (arr[parentIdx] > arr[childIdx]) {
       swap(arr, parentIdx, childIdx);
       childIdx = parentIdx;
     }
+    return;
   }
 }
 
@@ -53,3 +61,7 @@ function swap (arr, parentIdx, childIdx) {
   arr[parentIdx] = arr[childIdx];
   arr[childIdx] = temp;
 }
+
+var a = [-34, 3, -1, 1, 10, 0, -2, 100, 234, 34, 23423423];
+
+console.log(heapSort(a, 0, a.length));

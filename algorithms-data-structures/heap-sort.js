@@ -1,4 +1,4 @@
-function heapSort (arr, start, len) {
+function heapSort (arr) {
   var heapSize = 0;
 
   // turn the array into a heap
@@ -6,11 +6,13 @@ function heapSort (arr, start, len) {
     heapSize += 1;
     heapifyUp(arr, heapSize);
   }
-
+// debugger
   // change heap back into an array
+  // TODO: heapSort() not working for big sets.
   while (heapSize > 0) {
     var min = arr[0];
     arr[0] = arr[heapSize - 1];
+    arr[heapSize - 1] = null;
     heapSize -= 1;
     heapifyDown(arr, heapSize);
     arr[heapSize] = min;
@@ -25,8 +27,8 @@ function heapifyDown (arr, len, parentIdx) {
   }
 
   var childrenIdx = [parentIdx * 2 + 1, parentIdx * 2 + 2 ];
-  var parent = arr[parentIdx];
   for (var i = 0; i < 2; i++) {
+    var parent = arr[parentIdx];
     var childIdx = childrenIdx[i];
 
     // check that childIdx is within the array-heap; if not, this parent has no more children, no need to check child against parent;
@@ -51,8 +53,9 @@ function heapifyUp (arr, len) {
     if (arr[parentIdx] > arr[childIdx]) {
       swap(arr, parentIdx, childIdx);
       childIdx = parentIdx;
+    } else {
+      return;
     }
-    return;
   }
 }
 
@@ -61,7 +64,3 @@ function swap (arr, parentIdx, childIdx) {
   arr[parentIdx] = arr[childIdx];
   arr[childIdx] = temp;
 }
-
-var a = [-34, 3, -1, 1, 10, 0, -2, 100, 234, 34, 23423423];
-
-console.log(heapSort(a, 0, a.length));

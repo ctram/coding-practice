@@ -1,70 +1,61 @@
 require 'byebug'
+# algorithm: for a given array of elements, pick the first element which is called the pivot. compare all following elements to this pivot. elements go to two different buckets depending on whether the elements are less than or greater than the pivot. now run these two new arrays through the algorithm again. return the return of the algorith with the lesser passed through, followed by the pivot, followed by the greater passed through.
 
 def quick_sort arr
   if arr.length <= 1
     return arr
   end
 
-  left = []
-  right = []
   pivot = arr.first
+
+  lesser, greater = [], []
 
   (1..arr.length-1).each do |idx|
     el = arr[idx]
     if el <= pivot
-      left.push el
+      lesser.push el
     else
-      right.push el
+      greater.push el
     end
   end
 
-  return quick_sort(left) + [pivot] + quick_sort(right)
+  return quick_sort(lesser) + [pivot] + quick_sort(greater)
 end
 
-def quick_sort_in_place arr, start_e, end_e
+# time: iterator to compare elements is O(n)? how does recursion affect the time complexity?
+# space: O(n) or O(nlogn)
 
-  if end_e < 0
-    end_e = 0
-  end
-  if start_e > end_e
-    start_e = end_e
-  end
+# ask ned about how to come up with time and space complexities for both versions o quick sort, in place and out of place.
 
-  # arr of one element, already sorted, so return
-  if start_e == end_e
+def quick_sort_in_place! arr, s_idx = 0, e_idx = arr.length-1
+
+  e_idx = 0 if e_idx < 0
+  if e_idx - s_idx < 1
     return
   end
 
-  # sort the arr in place - find index of the pivot - everything to the left of
-  # the pivot is less than the pivot, but not necessarily in order - same goes
-  # for the right of the pivot, so we need to continue sorting the left and
-  # right sides
-  pivot_idx = partition arr, start_e, end_e
-
-  quick_sort_in_place arr, 0, pivot_idx-1 # sort the left side of the pivot
-  quick_sort_in_place arr, pivot_idx+1, end_e # sort the right side of the pivot
-
+  pivot_idx = partition_and_idx! arr, s_idx, e_idx
+  quick_sort_in_place! arr, s_idx, pivot_idx - 1
+  quick_sort_in_place! arr, pivot_idx + 1, e_idx
   return arr
 end
 
-# sort a given range within an arr, in place, then RETURNS the store_idx, which is the location of the pivot.
-def partition arr, start_e, end_e
-  pivot = arr[end_e]
-  store_idx = start_e
-
-  (start_e..end_e-1).each do |i|
-    el = arr[i]
+def partition_and_idx! arr, s_idx, e_idx
+  pivot = arr[e_idx]
+  store_idx = s_idx
+  (s_idx..e_idx-1).each do |idx|
+    el = arr[idx]
     if el < pivot
-      arr[i] = arr[store_idx]
-      arr[store_idx] = el
+      store = arr[store_idx]
+      arr[store_idx] = arr[idx]
+      arr[idx] = store
       store_idx += 1
     end
   end
-
-  arr[end_e] = arr[store_idx]
+  store = arr[store_idx]
   arr[store_idx] = pivot
+  arr[e_idx] = store
   store_idx
 end
 
-arr = [3, 2, 1,5, -2]
-p quick_sort_in_place arr, 0, arr.length-1
+p quick_sort_in_place! [5,4,8,4,5,7,4,2,2,3,55,66,77,33,44,22,33, -234,-345,-345345,-34535]

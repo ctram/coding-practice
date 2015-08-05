@@ -76,7 +76,6 @@ BinaryArrayHeap.prototype.heapifyDown = function (parentIdx) {
 };
 
 BinaryArrayHeap.prototype.heapifyUp = function (idx) {
-  // FIXME: infinite loop here
   if (idx === undefined) {
     idx = this.store.length - 1;
   }
@@ -94,7 +93,6 @@ BinaryArrayHeap.prototype.heapifyUp = function (idx) {
 
 BinaryArrayHeap.prototype.insert = function (item, priority) {
   // insert into the tail position of the array-heap
-  // TODO: insert a priorityNode instead of an array.
   var priorityNode = new PriorityNode(item, priority);
   this.store.push(priorityNode);
   // this.tailIdx += 1;

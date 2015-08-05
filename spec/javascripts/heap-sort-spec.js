@@ -16,8 +16,8 @@ describe('heapSort()', function () {
 
   it('should sort three massive arrays', function () {
     var testSets = [];
-    var numSets = 1;
-    var arrLen = 40;
+    var numSets = 3;
+    var arrLen = 400;
     var max = 1000;
     var set;
     for (var i = 0; i < numSets; i++) {
@@ -31,7 +31,7 @@ describe('heapSort()', function () {
       }
       testSets.push(set);
     }
-    for (i = 0; i < numSets; i++) {
+    for (i = 0; i < testSets.length; i++) {
       set = testSets[i];
       sortFn = function (a, b) {
         if (a < b) {
@@ -40,6 +40,8 @@ describe('heapSort()', function () {
           return 1;
         }
       };
+      expect(heapSort(set)).toEqual(set.sort(sortFn).reverse()); // don't think this is actually working
+      // expect(set).toEqual(set.sort(sortFn).reverse()); this passes too, and it couldn't possibly.
     }
   });
 });

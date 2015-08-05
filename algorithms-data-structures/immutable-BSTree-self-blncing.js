@@ -1,4 +1,3 @@
-<script>
 // Self-Balancing Immutable Binary Search Tree ////////////////////////////////
 // CONSTRUCTOR
 // function BSTree (k, v) {
@@ -38,22 +37,33 @@ function BSTNode (k, v, left, right) {
   }
 }
 
-// class function; recursively sets key/value pair
+// class function; recursively sets key/value pair; returns root node;
 BSTNode.setRecursively = function (node, k, v) {
-  debugger
+  // as you a rebuilding your tree, the balance of the current root at each recursive level - rotate as needed before returning the root node
+  var newNode;
+
   if (node === null) {
-    return new BSTNode(k, v, null, null);
+    newNode = new BSTNode(k, v, null, null);
   }
 
   if (node.k === k) {
-    return new BSTNode(k, v, node.left, node.right);
+    newNode = new BSTNode(k, v, node.left, node.right);
   }
 
   if (k < node.k) {
-    return new BSTNode(node.k, node.v, BSTNode.setRecursively(node.left, k, v), node.right);
+    newNode = new BSTNode(node.k, node.v, BSTNode.setRecursively(node.left, k, v), node.right);
   } else {
-    return new BSTNode(node.k, node.v, node.left, BSTNode.setRecursively(node.right, k, v));
+    newNode = new BSTNode(node.k, node.v, node.left, BSTNode.setRecursively(node.right, k, v));
   }
+
+
+};
+
+BSTNode.getBalance = function (node) {
+  var leftBal = node.left || 0;
+  var rightBal = node.right || 0;
+
+  return rightBal - leftBal;
 };
 
 BSTNode.prototype.get = function (k) {
@@ -82,14 +92,6 @@ BSTNode.prototype.hasKey = function (k) {
   }
 };
 
-BSTNode.prototype.rightRotate = function () {
-  // orig root
-  var formerRoot = new BSTNode(this.k, this.v, this.left.right, this.right);
-
-  // orig left; now the root
-  return new BSTNode(this.left.k, this.left.v, this.left.left, formerRoot);
-};
-
 BSTNode.prototype.leftRotate = function () {
   // orig root
   var formerRoot = new BSTNode(this.k, this.v, this.left, this.right.left);
@@ -98,4 +100,10 @@ BSTNode.prototype.leftRotate = function () {
   return new BSTNode(this.right.k, this.right.v, formerRoot, this.right.right);
 };
 
-</script>
+BSTNode.prototype.rightRotate = function () {
+  // orig root
+  var formerRoot = new BSTNode(this.k, this.v, this.left.right, this.right);
+
+  // orig left; now the root
+  return new BSTNode(this.left.k, this.left.v, this.left.left, formerRoot);
+};

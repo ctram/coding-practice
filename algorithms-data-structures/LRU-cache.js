@@ -23,7 +23,10 @@ LRUCache.prototype.get = function (k) {
 };
 
 LRUCache.prototype.insert = function (k, v) {
-  this.linkedList.push(k, v);
-
+  if (this.linkedList.length )
   // TODO: need to evict a link if the cache is full
+
+
+  // last thing to do; add a new link to the end of the list
+  this.linkedList.push(k, v);
 }

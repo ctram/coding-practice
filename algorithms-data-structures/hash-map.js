@@ -67,23 +67,27 @@ HashMap.prototype.set = function (k, v) {
   var hash = k.hash(); // k is a string; #hash returns a string of numbers
   var bucketNum = hash % this.capacity;
   var ll = this.store[bucketNum];
+
+  // bucket is empty - set a linked list there.
   if (ll === undefined) {
-    // bucket is empty - set a linked list there.
     ll = new LinkedList();
     ll.push([k, v]); // maybe here, instead of storing the key and value in an array, I should write the Link class to hold a key and value as ivars?
     this.store[bucketNum] = ll;
     this.numPairs += 1;
     this.numBucketsFilled += 1;
     this.checkForFilledBuckets();
+
+  // bucket has an existing linked list
   } else {
-    // bucket has an existing linked list
     link = ll.find_by_key(k); // NOTE: gave my LinkedList class a method to find a link when the argument is an array...
+
+    // no link exists yet for this key/vale pair; push key/value into the linked list.
     if (link === null) {
-      // no link exists yet for this key/vale pair; push key/value into the linked list.
       ll.push([k, v]);
       this.numPairs += 1;
+
+    // key exists; find link and set new value;
     } else {
-      // key exists; find link and set new value;
       var link = ll.find_by_key(k);
       link.val[1] = v;
     }

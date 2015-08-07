@@ -1,2 +1,2 @@
 # coding-practice
-Practice implementing algorithms and data structures, mostly in JavaScript, some in Ruby.
+Practice implementing coding problems, algorithms and data structures, mostly in JavaScript, some in Ruby.

@@ -21,6 +21,7 @@ function DoublyLinkedList () {
   this.rearSentinel.previous = this.frontSentinel;
 }
 
+// returns a new link
 DoublyLinkedList.prototype.push = function (k, v) {
   var newLink;
   if (this.frontSentinel.next === this.rearSentinel) {
@@ -33,6 +34,7 @@ DoublyLinkedList.prototype.push = function (k, v) {
     previousTail.next = newLink;
     this.rearSentinel.previous = newLink;
   }
+  return newLink;
 }
 
 DoublyLinkedList.prototype.shift = function (k, v) {

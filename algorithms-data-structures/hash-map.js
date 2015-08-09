@@ -18,8 +18,9 @@ HashMap.prototype.checkForFilledBuckets = function () {
 };
 
 HashMap.prototype.delete = function (k) {
-  var hash = k.hash();
-  var bucketNum = k.hash() % this.capacity;
+  // TODO: turn all numbers to strings - hash - then turn back to number.
+  var hash = k.toString().hash();
+  var bucketNum = hash % this.capacity;
   var ll = this.store[bucketNum];
   if (ll === undefined) {
     return null;
@@ -34,8 +35,8 @@ HashMap.prototype.delete = function (k) {
 };
 
 HashMap.prototype.get = function (k) {
-  var hash = k.hash();
-  var bucketNum = k.hash() % this.capacity;
+  var hash = k.toString().hash();
+  var bucketNum = hash % this.capacity;
   var ll = this.store[bucketNum];
   if (ll === undefined) {
     return null;
@@ -44,6 +45,14 @@ HashMap.prototype.get = function (k) {
     return link.val[1];
   }
 };
+
+HashMap.prototype.hasKey = function (k) {
+  if (this.get(k) !== null) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 HashMap.prototype.resize = function () {
   var newHashMap = new HashMap(this.capacity * 2);
@@ -64,7 +73,7 @@ HashMap.prototype.resize = function () {
 };
 
 HashMap.prototype.set = function (k, v) {
-  var hash = k.hash(); // k is a string; #hash returns a string of numbers
+  var hash = k.toString().hash();
   var bucketNum = hash % this.capacity;
   var ll = this.store[bucketNum];
 
@@ -94,7 +103,7 @@ HashMap.prototype.set = function (k, v) {
   }
 };
 
-// Simple take on hashing a string.
+// Simple take on hashing a string; returns an int
 String.prototype.hash = function () {
   var chars = this.split('');
   var result = '';
@@ -102,5 +111,5 @@ String.prototype.hash = function () {
     result += char.charCodeAt(0);
   });
 
-  return result;
+  return parseInt(result);
 };

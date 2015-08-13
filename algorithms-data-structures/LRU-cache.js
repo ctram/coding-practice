@@ -11,12 +11,11 @@ LRUCache.prototype.evict = function () {
 };
 
 LRUCache.prototype.get = function (k) {
-
   var link = this.hsh.get(k);
-
   // key does not exist in the LRUCache
   if (link === null) {
     return null;
+
   // return the value and the move the link containing the value to the back of the list (i.e. the most recent link)
   } else {
     var key = link.k;
@@ -28,7 +27,6 @@ LRUCache.prototype.get = function (k) {
 };
 
 LRUCache.prototype.insert = function (k, v) {
-
   if (this.hsh.hasKey(k)) {
     hsh[k].remove();
     this.count--;

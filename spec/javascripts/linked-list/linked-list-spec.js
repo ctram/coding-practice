@@ -2,7 +2,7 @@ describe('Linked List Class', function () {
   var ll;
 
   beforeEach(function () {
-    ll = new LinkedList();
+    ll = new SinglyLinkedList();
   });
 
   describe('on initialize', function () {

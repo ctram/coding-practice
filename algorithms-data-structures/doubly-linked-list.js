@@ -12,8 +12,6 @@ Link.prototype.remove = function () {
   next.previous = previous
 };
 
-// link should have #remove method that removes itself from the LL
-// LRU class should have #insert, #get, #evict
 function DoublyLinkedList () {
   this.frontSentinel = new Link();
   this.rearSentinel = new Link();

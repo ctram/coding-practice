@@ -18,8 +18,6 @@ function PriorityNode (item, priority) {
 
 function BinaryArrayHeap () {
   this.store = [];
-  this.count = 0;
-  // this.tailIdx = 0;
 }
 
 // Class method
@@ -32,19 +30,27 @@ BinaryArrayHeap.hasChildren = function (store, parentIdx) {
   }
 };
 
-BinaryArrayHeap.prototype.childrenIdx = function (parentIdx) {
-// childrenIdx = parentIdx * 2 + 1 (first child)
+BinaryArrayHeap.prototype._childrenIdx = function (parentIdx) {
+
+  // NOTE: childrenIdx = parentIdx * 2 + 1 (for the first child)
   var firstChildIdx = parentIdx * 2 + 1;
+
+  // there is only one child
   if (firstChildIdx + 1 > this.store.length - 1) {
-    // there is only one child
     return [firstChildIdx];
-  } else {
-    // there are two children
+
+  // there are two children
+  } else if (firstChildIdx + 1 <= this.store.length - 1) {
     return [firstChildIdx, firstChildIdx + 1];
+
+  // there are no children; parent is a leaf
+  } else {
+    return [];
   }
 };
 
 BinaryArrayHeap.prototype.extract = function () {
+
   if (this.store.length === 0) {
     return null;
   }
@@ -52,30 +58,39 @@ BinaryArrayHeap.prototype.extract = function () {
   var tail = this.store[this.store.length-1];
   this.store[0] = tail;
   this.store.pop();
-  this.count -= 1;
-  this.heapifyDown();
+  this._heapifyDown();
   return root.item;
 };
 
-BinaryArrayHeap.prototype.heapifyDown = function (parentIdx) {
+BinaryArrayHeap.prototype._heapifyDown = function (parentIdx) {
   if (parentIdx === undefined) {
     parentIdx = 0;
   }
   var parent = this.store[parentIdx];
   if (BinaryArrayHeap.hasChildren(this.store, parentIdx)) {
-    var childrenIdx = this.childrenIdx(parentIdx);
-    for (var i = 0; i < childrenIdx.length; i++) {
-      var child = this.store[childrenIdx[i]];
-      if (child.priority < parent.priority) {
-        this.switchPlaces(parentIdx, childrenIdx[i]);
-        this.heapifyDown(childrenIdx[i]);
-        return;
-      }
+    var childrenIdx = this._childrenIdx(parentIdx);
+    var childOneIdx = childrenIdx[0];
+    var childTwoIdx = childrenIdx[1];
+
+    var chosenChildIdx;
+    if (childTwoIdx === undefined) {
+      chosenChildIdx = childOneIdx;
+    } else {
+      var childOne = this.store[childOneIdx];
+      var childTwo = this.store[childTwoIdx];
+      childOne.priority < childTwo.priority ? chosenChildIdx = childOneIdx : chosenChildIdx = childTwoIdx;
     }
- }
+
+    var chosenChild = this.store[chosenChildIdx];
+    if (chosenChild.priority < parent.priority) {
+      this._switchPlaces(parentIdx, chosenChildIdx);
+      this._heapifyDown(chosenChildIdx);
+      return;
+    }
+  }
 };
 
-BinaryArrayHeap.prototype.heapifyUp = function (idx) {
+BinaryArrayHeap.prototype._heapifyUp = function (idx) {
   if (idx === undefined) {
     idx = this.store.length - 1;
   }
@@ -84,23 +99,21 @@ BinaryArrayHeap.prototype.heapifyUp = function (idx) {
     var parentIdx = Math.floor((idx - 1) / 2);
     var parent = this.store[parentIdx];
     if (parent.priority > child.priority) {
-      // switch places
-      this.switchPlaces(parentIdx, idx);
+      this._switchPlaces(parentIdx, idx);
     }
     idx = parentIdx;
   }
 };
 
 BinaryArrayHeap.prototype.insert = function (item, priority) {
-  // insert into the tail position of the array-heap
   var priorityNode = new PriorityNode(item, priority);
+
+  // insert into the tail position of the array-heap
   this.store.push(priorityNode);
-  // this.tailIdx += 1;
-  this.heapifyUp();
-  this.count += 1;
+  this._heapifyUp();
 };
 
-BinaryArrayHeap.prototype.switchPlaces = function (idx1, idx2) {
+BinaryArrayHeap.prototype._switchPlaces = function (idx1, idx2) {
   var node1 = this.store[idx1];
   var node2 = this.store[idx2];
   this.store[idx1] = node2;
